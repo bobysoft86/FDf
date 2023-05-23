@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mlx_init.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: roberodr <roberodr@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/19 15:10:25 by roberodr          #+#    #+#             */
-/*   Updated: 2023/05/16 15:11:43 by roberodr         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
 # include "mlx.h"
 # include "../libraries/clift/libft.h"
 #include <stdlib.h>
@@ -43,6 +30,7 @@ typedef struct	s_matrix{
 	int  space;
 	int ang;
 	char *map;
+	char **map_parsed;
 }	t_matrix;
 
 
@@ -124,6 +112,7 @@ int ft_read_map(char *argv, t_vars *vars)
 	j = 0;
 	i = 0;
 	
+	vars->matrix->map_parsed = malloc (sizeof (char **) * 1 );
 	vars->matrix->map = malloc (sizeof (char *) * 1 );
 	line_parsed = malloc (sizeof (char *) * 1 );
 	
@@ -147,12 +136,29 @@ int ft_read_map(char *argv, t_vars *vars)
 		i =0;
 		free(line);
 		vars->matrix->map[j]= '\0';
-		printf(" parte entrada \n%s\n", vars->matrix->map);
+		printf("esto es sin parsear \n%s", vars->matrix->map );
+		//printf(" parte entrada \n%s\n", vars->matrix->map);
 	}
 	return (1);
 }
 
+void ft_parse_map(char *map, char **map_parsed)
+ {
+	//int j = 0;
+	int i = 0;
 
+	ft_strlen(map);
+	
+	
+	map_parsed = ft_split(map, ' ');
+
+	while (map_parsed[i] != NULL)
+	{
+		printf("Esto es el parseado%s\n", map_parsed[i]);
+		i++;	
+	}
+	
+}
 
 
 //copia de la version funcional de read map antes preparar la print map
@@ -160,144 +166,27 @@ int ft_read_map(char *argv, t_vars *vars)
 void ft_print_map(t_vars *vars)
 {
 	int i;
-	int j = 0;
-	int up_x;
-	int up_y;
-	int tmp_upx;
-	int tmp_upy;
+	int j;
 	
-
-	
+	j = 0;
 	i = 0;
 	
-	while(vars->matrix->map[i] != '\0')	
-	{		
-		if (vars->matrix->map[i] == '\0')
-		{
-			j++;
-		}
-		
-		if (vars->matrix->map[i] == '0' &&	vars->matrix->map[i + 2] > '0')
-		{
-			up_x = vars->matrix->pos_x - atoi(vars->matrix->map + (i+1));
-			up_y = vars->matrix->pos_y - atoi(vars->matrix->map + (i+1));
-			tmp_upx = up_x;
-			tmp_upy = up_y;
-			
-			//my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-			
-			ft_print_line2( (vars->matrix->pos_x  - vars->matrix->pos_y ) , (vars->matrix->pos_x + vars->matrix->pos_y), (up_x  - up_y ), (up_x + up_y) ,  vars);
-			//printf("UP x:%f y:%f\n",(up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120));
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		
-		// if (vars->matrix->map[i] > '0' && vars->matrix->map[i + 1] == '0')
-		// {
-		// 	up_x = vars->matrix->pos_x - atoi(vars->matrix->map + (i+1));
-		// 	up_y = vars->matrix->pos_y - atoi(vars->matrix->map + (i+1));
-		// 	//my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-		// 	ft_print_line2( (vars->matrix->pos_x  - vars->matrix->pos_y ) , (vars->matrix->pos_x + vars->matrix->pos_y), (up_x  - up_y ), (up_x + up_y) ,  vars);
-		// 	printf("UP x:%f y:%f\n",(up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120));
-		// 	vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-		// 	while(ft_isdigit(vars->matrix->map[i]))
-		// 		i++;
-			
-		// }
-		if (vars->matrix->map[i] > '0' && vars->matrix->map[i + 3] > '0')
-		{
-			up_x = vars->matrix->pos_x - atoi(vars->matrix->map + (i+1));
-			up_y = vars->matrix->pos_y - atoi(vars->matrix->map + (i+1));
-			//my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-			ft_print_line2( (up_x  - up_y ) , (up_x + up_y), tmp_upx, tmp_upy ,  vars);
-			//printf("UP x:%f y:%f\n",(up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120));
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		
-		if (vars->matrix->map[i] == '0' && vars->matrix->map[i+1] == '\n' ) 
-		{
-			//my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-			ft_print_line(vars->matrix->pos_x - vars->matrix->space , vars->matrix->pos_y, vars->matrix->pos_x, vars->matrix->pos_y, vars);//lineas verticales 
-			ft_print_line(vars->matrix->pos_x, vars->matrix->pos_y, vars->matrix->pos_x, vars->matrix->pos_y + vars->matrix->space, vars);//lineas horizontales
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		 if (vars->matrix->map[i] == '0' && vars->matrix->map[i+1] == '\0')
-		{
-			// my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-			ft_print_line(vars->matrix->pos_x - vars->matrix->space , vars->matrix->pos_y, vars->matrix->pos_x, vars->matrix->pos_y, vars);
-			
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		 if (vars->matrix->map[i] == '0') 
-		{
-			
-			my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
-			//printf("down x:%f y:%f\n", (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(vars->matrix->ang), (vars->matrix->pos_x + vars->matrix->pos_y) * sin(vars->matrix->ang));
-			ft_print_line(vars->matrix->pos_x, vars->matrix->pos_y, vars->matrix->pos_x + vars->matrix->space, vars->matrix->pos_y, vars); // lineas horizontales
-			//ft_print_line(vars->matrix->pos_x, vars->matrix->pos_y, vars->matrix->pos_x, vars->matrix->pos_y + vars->matrix->space, vars);//lineas verticales + sobrante
-			//ft_print_line(vars->matrix->pos_x - vars->matrix->space , vars->matrix->pos_y, vars->matrix->pos_x, vars->matrix->pos_y, vars);//lineas verticales 
-			//ft_print_line(vars->matrix->pos_x, vars->matrix->pos_y - vars->matrix->space, vars->matrix->pos_x, vars->matrix->pos_y, vars);//lineas horizontales
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		
-		if (vars->matrix->map[i] == '-')
-		{
-			i++;
-			up_x = vars->matrix->pos_x + atoi(vars->matrix->map + i);
-			up_y = vars->matrix->pos_y + atoi(vars->matrix->map + i);
-			//my_mlx_pixel_put(vars->data, (up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120), 0x00FFF00);
-			printf("UP x:%f y:%f\n",(up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120));			
-			
-			//ft_print_line2( (vars->matrix->pos_x  - vars->matrix->pos_y ), (vars->matrix->pos_x + vars->matrix->pos_y) , (up_x  - up_y ) , (up_x + up_y) ,  vars);
-			
-			//ft_print_line(up_x - vars->matrix->space, up_y, up_x, up_y, vars);//lineas verticales 
-			//ft_print_line(up_x, up_y - vars->matrix->space , up_x, up_y, vars);//lineas horizontales
-			
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		
-		if (vars->matrix->map[i] > '0') 
-		{
-			up_x = vars->matrix->pos_x - atoi(vars->matrix->map + i);
-			up_y = vars->matrix->pos_y - atoi(vars->matrix->map + i);
-			//my_mlx_pixel_put(vars->data, (up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120), 0x00FFF00);
-			//printf("UP x:%f y:%f\n",(up_x  - up_y ) * cos(120), (up_x + up_y) * sin(120));			
-			
-			//ft_print_line2( (vars->matrix->pos_x  - vars->matrix->pos_y ) , (vars->matrix->pos_x + vars->matrix->pos_y), (up_x  - up_y ), (up_x + up_y) ,  vars);
-			//ft_print_line(up_x - vars->matrix->space, up_y, up_x, up_y, vars);//lineas verticales 
-			//ft_print_line(up_x, up_y - vars->matrix->space , up_x, up_y, vars);//lineas horizontales
-			
-			vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
-			while(ft_isdigit(vars->matrix->map[i]))
-				i++;
-		}
-		
-		
-		if (vars->matrix->map[i] == ' ')
-			i++;
-		
-		if (vars->matrix->map[i] == '\n')
-			{
-			i++;
-			vars->matrix->pos_x = vars->matrix->tmp_pos;
-			vars->matrix->pos_y = vars->matrix->pos_y + vars->matrix->space;
-			}
+	ft_parse_map(vars->matrix->map, vars->matrix->map_parsed);
+	while (vars->matrix->map_parsed[i] != NULL)
+	{
+		printf("Esto es AAA%s\n", vars->matrix->map_parsed[i]);
+		i++;	
 	}
-	//vars->matrix->pos_y = vars->matrix->pos_y  + vars->matrix->space;
-	//vars->matrix->pos_x = vars->matrix->tmp_pos;
-}
-
+	//printf("parte entrada \n%s\n", vars->matrix->map_parsed[i]);
+	// while(vars->matrix->map_parsed[i] != NULL )	
+	// {
+	// 	my_mlx_pixel_put(vars->data, (vars->matrix->pos_x  - vars->matrix->pos_y ) * cos(120),(vars->matrix->pos_x + vars->matrix->pos_y) * sin(120), 0x00FFF00);
+	// 	vars->matrix->pos_x = vars->matrix->pos_x + vars->matrix->space;
+	// 	//printf("%s", vars->matrix->map_parsed[i] );
+	// 	i++;
+	// }
+	// printf("esto es la len de parse map %d",i);
+ }
 
 int key_hook(int keycode, t_vars *vars)
 {
@@ -339,6 +228,7 @@ int key_hook(int keycode, t_vars *vars)
 	
   	return(0);
 }
+
 int	main(int argc, char **argv)
 {
 	t_vars	vars;
@@ -355,7 +245,7 @@ int	main(int argc, char **argv)
 	vars.matrix->pos_y = 1;
 	vars.matrix->tmp_pos = vars.matrix->pos_x;
 	vars.matrix->tmp_pos2 = vars.matrix->pos_y;
-	vars.matrix->space =  10;
+	vars.matrix->space =  2;
 	vars.mlx = mlx_init();
 	vars.mlx_win = mlx_new_window(vars.mlx, 1920, 1080, "pillar mapa");
 	vars.data->img = mlx_new_image(vars.mlx, 1920, 1080);
